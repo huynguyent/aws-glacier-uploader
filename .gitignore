@@ -1,5 +1,12 @@
 .DS_Store
 .idea/
+/build
+/dist
+*.egg-info
+__pycache__
+.pytest_cache
+.vscode/
+
 
 # Common virtualenv names
 venv
