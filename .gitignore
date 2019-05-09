@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+
+# Common virtualenv names
+venv
+env2
+env3
