@@ -5,7 +5,7 @@ term = Terminal()
 
 
 def info(message):
-    print(f"{term.bold_green('  ◦')} {message}", file=stderr)
+    print(f"{term.bold_green('◦')} {message}", file=stderr)
 
 
 def success(message):

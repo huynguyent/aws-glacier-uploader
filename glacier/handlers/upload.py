@@ -1,21 +1,16 @@
-from glacier import aws
-from glacier.printer import success, fatal
-import botocore.exceptions
+import boto3
+from glacier.printer import success, info
 
 
 def upload(vault_name, file_name, description, concurrency):
-    client = aws.create_glacier_client()
-    try:
-        file = open(file_name, 'rb')
-        data = file.read()
-        response = client.upload_archive(
-            vaultName=vault_name,
-            archiveDescription=description,
-            body=data
-        )
-        print(response)
-    except botocore.exceptions.NoCredentialsError:
-        fatal('Unable to locate credentials. You can configure credentials by running "aws configure".')
-    except Exception as ex:
-        fatal(str(ex))
-
+    client = boto3.client('glacier')
+    file = open(file_name, 'rb')
+    data = file.read()
+    file.close()
+    info(f"Uploading file to vault {vault_name}")
+    response = client.upload_archive(
+        vaultName=vault_name,
+        archiveDescription=description,
+        body=data
+    )
+    success(f"File have been uploaded to Glacier at {response['location']}")
