@@ -1,10 +1,9 @@
 """Glacier: An easy tool to work with AWS Glacier.
 
 Usage:
-    glacier create-vault [options] --vault-name <vault_name>
-    glacier list-vaults [options]
+    glacier create [options] <vault_name>
+    glacier list [options]
     glacier help
-
 Options:
     --region aws_region
     --account-id <account_id>   Your AWS account ID [default: -]
@@ -22,10 +21,10 @@ def main(argv=sys.argv):
     args = docpie(__doc__, argv=argv, version=version)
     account_id = args['--account-id']
 
-    if args["create-vault"]:
+    if args["create"]:
         vault_name = args['<vault_name>']
         create_vault(account_id, vault_name)
-    elif args["list-vaults"]:
+    elif args["list"]:
         list_vaults(account_id)
     else:
         exit(__doc__)
