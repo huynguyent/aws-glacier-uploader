@@ -1,11 +1,11 @@
-"""Glacier: An easy tool to work with AWS Glacier.
+"""aws-glacier-uploader: A command-line tool that performs multipart upload to AWS Glacier.
 
 Usage:
     glacier create [options] <vault_name>
     glacier list [options]
     glacier help
 Options:
-    --region aws_region
+    --region <aws_region>       Your AWS region
     --account-id <account_id>   Your AWS account ID [default: -]
 """
 
