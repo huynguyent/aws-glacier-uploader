@@ -1,17 +1,21 @@
-from glacier import client
+from glacier import aws
 from glacier.printer import success, fatal
 import botocore.exceptions
 
 
-def create_vault(account_id, vault_name):
-    glacier_client = client.create_glacier_client()
+def upload(vault_name, file_name, description, concurrency):
+    client = aws.create_glacier_client()
     try:
-        response = glacier_client.create_vault(
-            accountId=account_id,
+        file = open(file_name, 'rb')
+        data = file.read()
+        response = client.upload_archive(
             vaultName=vault_name,
+            archiveDescription=description,
+            body=data
         )
-        success(f"A new vault has been created at: {response['location']}")
+        print(response)
     except botocore.exceptions.NoCredentialsError:
         fatal('Unable to locate credentials. You can configure credentials by running "aws configure".')
     except Exception as ex:
         fatal(str(ex))
+
