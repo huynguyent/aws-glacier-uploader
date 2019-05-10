@@ -12,5 +12,5 @@ setuptools.setup(
     entry_points={
         'console_scripts': ['glacier=glacier.glacier:main']
     },
-    install_requires=['docpie', 'boto3']
+    install_requires=['docpie', 'boto3', 'blessings']
 )
