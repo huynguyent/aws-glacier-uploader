@@ -2,8 +2,18 @@ import boto3
 from glacier.printer import success, info
 
 
-def upload(vault_name, file_name, description, concurrency):
+def handler(args):
+    vault_name = args['<vault_name>']
+    file_name = args['<file_name>']
+    description = args['--description'] if args['--description'] else ''
+    concurrency = args['--concurrency']
     client = boto3.client('glacier')
+
+    response = upload_archive(client, vault_name, file_name, description, concurrency)
+    success(f"File have been uploaded to Glacier at {response['location']}")
+
+
+def upload_archive(client, vault_name, file_name, description, concurrency):
     file = open(file_name, 'rb')
     data = file.read()
     file.close()
@@ -13,4 +23,4 @@ def upload(vault_name, file_name, description, concurrency):
         archiveDescription=description,
         body=data
     )
-    success(f"File have been uploaded to Glacier at {response['location']}")
+    return response

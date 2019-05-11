@@ -4,10 +4,11 @@ Usage:
     glacier upload [options] <vault_name> <file_name>
     glacier create <vault_name>
     glacier list
+    glacier list <vault_name>
 
 Options:
-    -d --description <description>              The archive description that you are uploading
-    -c --concurrency <concurrency>              The number of upload jobs to run in parallel [default: 10]
+    -d --description <description>                      The archive description that you are uploading
+    -c --concurrency <concurrency>                      The number of upload jobs to run in parallel [default: 10]
 """
 
 import sys
@@ -15,6 +16,7 @@ import pkg_resources
 from docpie import docpie
 import botocore.exceptions
 from glacier.printer import fatal
+from glacier.handlers import create, list, upload
 
 
 def main(argv=sys.argv):
@@ -23,19 +25,11 @@ def main(argv=sys.argv):
 
     try:
         if args['create']:
-            from glacier.handlers.create import create_vault
-            vault_name = args['<vault_name>']
-            create_vault(vault_name)
+            create.handler(args)
         elif args['list']:
-            from glacier.handlers.list import list_vaults
-            list_vaults()
+            list.handler(args)
         elif args['upload']:
-            from glacier.handlers.upload import upload
-            vault_name = args['<vault_name>']
-            file_name = args['<file_name>']
-            description = args['--description'] if args['--description'] else ''
-            concurrency = args['--concurrency']
-            upload(vault_name, file_name, description, concurrency)
+            upload.handler(args)
         else:
             print(__doc__)
     except botocore.exceptions.NoRegionError:
