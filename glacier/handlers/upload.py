@@ -1,6 +1,7 @@
 import os
 import boto3
 from botocore.utils import calculate_tree_hash
+from tqdm import tqdm
 from multiprocessing.dummy import Pool
 from glacier.printer import success, info
 from glacier.models.archive_part import ArchivePart
@@ -24,9 +25,14 @@ def upload_archive(client, vault_name, file_name, description, concurrency):
                                                  archiveDescription=description)['uploadId']
 
     parts = generate_archive_parts(vault_name, file_name, upload_id, file_size, part_size)
-    info(f'Uploading files in {len(parts)} parts')
-    pool = Pool(concurrency)
-    pool.map(upload_archive_part, parts)
+    base_name = os.path.basename(file_name)
+    info(f'Uploading {base_name} in {len(parts)} parts')
+    with Pool(concurrency) as pool:
+        pbar = tqdm(total=file_size, unit="", unit_scale=True, dynamic_ncols=True,
+                    bar_format='{percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} ({rate_fmt})')
+        for uploaded_size in pool.imap_unordered(upload_archive_part, parts):
+            pbar.update(uploaded_size)
+        pbar.close()
 
     info('Verifying checksum')
     checksum = calculate_tree_hash(open(file_name, 'rb'))
@@ -35,13 +41,12 @@ def upload_archive(client, vault_name, file_name, description, concurrency):
 
 
 def upload_archive_part(archive_part):
-    print(f'Uploading part {archive_part.order + 1}')
     client = boto3.client('glacier')
     data = read_bytes(archive_part.file_name, archive_part.start_byte, archive_part.part_size)
     client.upload_multipart_part(vaultName=archive_part.vault_name, uploadId=archive_part.upload_id,
                                  range=archive_part.range,
                                  body=data)
-    print(f'Finished uploading part {archive_part.order + 1}')
+    return archive_part.part_size
 
 
 def generate_archive_parts(vault_name, file_name, upload_id, file_size, part_size):
@@ -65,7 +70,7 @@ def generate_archive_parts(vault_name, file_name, upload_id, file_size, part_siz
 
 
 def calculate_part_size(file_size):
-    part_size = 8 * (1024 ** 2)  # 8 MB
+    part_size = 1 * (1024 ** 2)  # 1 MB
     while (file_size / part_size) > PART_COUNT_LIMIT:
         part_size *= 2
     return part_size
