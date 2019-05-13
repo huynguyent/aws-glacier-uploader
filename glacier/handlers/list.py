@@ -1,7 +1,9 @@
 import json
+
 import boto3
-from terminaltables import AsciiTable
 import humanize
+from terminaltables import AsciiTable
+
 from glacier.printer import success, error
 
 

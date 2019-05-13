@@ -12,11 +12,13 @@ Options:
 """
 
 import sys
+
+import botocore.exceptions
 import pkg_resources
 from docpie import docpie
-import botocore.exceptions
-from glacier.printer import fatal
+
 from glacier.handlers import create, list, upload
+from glacier.printer import fatal
 
 
 def main(argv=sys.argv):

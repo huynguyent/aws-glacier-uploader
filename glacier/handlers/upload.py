@@ -1,10 +1,12 @@
 import os
+from multiprocessing.dummy import Pool
+
 import boto3
 from botocore.utils import calculate_tree_hash
 from tqdm import tqdm
-from multiprocessing.dummy import Pool
-from glacier.printer import success, info
+
 from glacier.models.archive_part import ArchivePart
+from glacier.printer import success, info
 
 PART_COUNT_LIMIT = 10000
 

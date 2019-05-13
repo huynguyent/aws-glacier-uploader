@@ -1,4 +1,5 @@
 from sys import stderr
+
 from blessings import Terminal
 
 term = Terminal()
