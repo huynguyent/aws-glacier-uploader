@@ -4,7 +4,7 @@ import boto3
 import humanize
 from terminaltables import AsciiTable
 
-from glacier.printer import success, error
+from glacier.printer import success
 
 
 def handler(args):
@@ -20,7 +20,11 @@ def handler(args):
 def list_archives_in_vault(client, vault_name):
     inventory_job = get_latest_inventory_job(client, vault_name)
     if inventory_job is None:
-        error("Inventory not retrieved yet. Please try again later.")
+        client.initiate_job(vaultName=vault_name, jobParameters={"Type": "inventory-retrieval"})
+        success(
+            "An inventory retrieval request for this vault has been sent. "
+            "It typically takes about 4 hours for AWS to process the request. "
+            "Please check back again later.")
     else:
         job_id = inventory_job['JobId']
         archive_list = get_archive_list(client, vault_name, job_id)
