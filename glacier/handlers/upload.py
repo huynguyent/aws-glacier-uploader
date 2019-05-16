@@ -15,7 +15,7 @@ def handler(args):
     vault_name, file_name, description, concurrency = parse_args(args)
     client = boto3.client('glacier')
     response = upload_archive(client, vault_name, file_name, description, concurrency)
-    success(f"{file_name} have been uploaded to Glacier at {response['location']}")
+    success(f"{file_name} have been uploaded to {vault_name}")
 
 
 def upload_archive(client, vault_name, file_name, description, concurrency):

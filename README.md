@@ -1,4 +1,7 @@
 # aws-glacier-uploader
+
+<p align="center"><img src="/img/glacier-demo.gif?raw=true"/></p>
+
 A command-line tool that performs multipart upload to AWS Glacier, a feature that is not natively supported by AWS official CLI.
 
 This tool simplifies the multipart upload process, which would otherwise be a series of tedious  steps such as split files, upload parts, calculate checksums, ... The upload process also utilizes multithreading to maximize upload speed.  
