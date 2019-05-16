@@ -5,6 +5,7 @@ Usage:
     glacier list
     glacier list <vault_name>
     glacier create <vault_name>
+    glacier delete <vault_name> [<archive_id>]
 
 Options:
     -d --description <description>                      The archive description that you are uploading
@@ -17,7 +18,7 @@ import botocore.exceptions
 import pkg_resources
 from docpie import docpie
 
-from glacier.handlers import create, list, upload
+from glacier.handlers import create, list, upload, delete
 from glacier.printer import fatal
 
 
@@ -32,6 +33,8 @@ def main(argv=sys.argv):
             list.handler(args)
         elif args['upload']:
             upload.handler(args)
+        elif args['delete']:
+            delete.handler(args)
         else:
             print(__doc__)
     except botocore.exceptions.NoRegionError:

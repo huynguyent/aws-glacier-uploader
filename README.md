@@ -38,8 +38,9 @@ Usage:
     glacier list
     glacier list <vault_name>
     glacier create <vault_name>
+    glacier delete <vault_name> [<archive_id>]
 
 Options:
-    -d --description <description>          The archive description that you are uploading
-    -c --concurrency <concurrency>          The number of upload jobs to run in parallel [default: 10]
+    -d --description <description>                      The archive description that you are uploading
+    -c --concurrency <concurrency>                      The number of upload jobs to run in parallel [default: 10]
 ```
